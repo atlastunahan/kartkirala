@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Admin panelini tarama
+Disallow: /#/admin
+Disallow: /#/admin/*
+
+Sitemap: https://kartkirala.com/sitemap.xml
