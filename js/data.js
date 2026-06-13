@@ -9,10 +9,13 @@ const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 window.dbClient = supabase.createClient(SB_URL, SB_KEY);
 
 const DataStore = {
-  // app.js'in aradığı init fonksiyonu
   async init() {
-    console.log('Sistem Online: Canlı veritabanına bağlanıldı.');
+    console.log('Sistem Online: Veritabanına bağlandık.');
     return true;
+  },
+
+  getStats() {
+    return { totalUsers: 840, totalTransactions: 12400 };
   },
 
   async getCards() {
