@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KartKirala | Crypto Virtual Cards</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-primary text-white">
+
+  <div id="app-content">
+    <!-- İçerik buraya JS ile yüklenecek -->
+  </div>
+
+  <script>
+    /* ============================================
+       KartKirala — Tek Dosya Mimari (Kesin Çözüm)
+       ============================================ */
+    
+    // 1. BAĞLANTI AYARLARI
+    const SB_URL = 'https://fyjulwullaavjmfceqrq.supabase.co';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5anVsd3VsbGFhdmptZmNlcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDA4NzAsImV4cCI6MjA5Njg3Njg3MH0.fCLnUVqZxtesX7domAmUBQ79LeD__A5mcCfdwsgwM-o';
+    const dbClient = supabase.createClient(SB_URL, SB_KEY);
+
+    // 2. VERİ YÖNETİMİ
+    const DataStore = {
+      async getCards() {
+        const { data, error } = await dbClient.from('cards').select('*').eq('active', true);
+        return data || [];
+      },
+      async getCurrentUser() {
+        const { data: { user } } = await dbClient.auth.getUser();
+        if (!user) return null;
+        const { data: profile } = await dbClient.from('profiles').select('*').eq('id', user.id).single();
+        return { ...user, profile };
+      }
+    };
+
+    // 3. UYGULAMA BAŞLATICI
+    async function initApp() {
+      const cards = await DataStore.getCards();
+      console.log("Yüklenen Kartlar:", cards);
+      
+      // Örn: Ana sayfa render (Sadece test amaçlı)
+      document.getElementById('app-content').innerHTML = `
+        <div style="padding: 100px; text-align: center;">
+          <h1>Sistem Online! 🚀</h1>
+          <p>Veritabanında <b>${cards.length}</b> adet kart bulundu.</p>
+          <a href="/index.html" style="color: #6366f1;">Siteye Dön</a>
+        </div>
+      `;
+    }
+
+    // Uygulamayı başlat
+    window.onload = initApp;
+  </script>
+
+  <!-- Eski JS dosyalarını yüklüyoruz (Yavaş yavaş bu yapıya geçeceğiz) -->
+  <script src="js/icons.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
