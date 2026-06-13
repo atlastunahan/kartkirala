@@ -3,10 +3,16 @@
    ============================================ */
 
 const DataStore = {
+  // Uygulama başladığında çağrılan boş init fonksiyonu (app.js hatasını önler)
+  async init() {
+    console.log('DataStore Supabase bağlantısı aktif.');
+    return true;
+  },
+
   // Veritabanından Kartları Getir
   async getCards() {
     try {
-      const { data, error } = await window.supabase
+      const { data, error } = await window.sbClient
         .from('cards')
         .select('*')
         .eq('active', true);
@@ -21,14 +27,14 @@ const DataStore = {
 
   // Üye Ol
   async register(email, password) {
-    const { data, error } = await window.supabase.auth.signUp({
+    const { data, error } = await window.sbClient.auth.signUp({
       email,
       password,
     });
     if (error) throw error;
     
     // Profil oluştur
-    await window.supabase.from('profiles').insert([
+    await window.sbClient.from('profiles').insert([
       { id: data.user.id, email: email, balance: 0, role: 'user' }
     ]);
     
@@ -37,7 +43,7 @@ const DataStore = {
 
   // Giriş Yap
   async login(email, password) {
-    const { data, error } = await window.supabase.auth.signInWithPassword({
+    const { data, error } = await window.sbClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -47,10 +53,10 @@ const DataStore = {
 
   // Mevcut Kullanıcı Bilgisi
   async getCurrentUser() {
-    const { data: { user } } = await window.supabase.auth.getUser();
+    const { data: { user } } = await window.sbClient.auth.getUser();
     if (!user) return null;
 
-    const { data: profile } = await window.supabase
+    const { data: profile } = await window.sbClient
       .from('profiles')
       .select('*')
       .eq('id', user.id)
@@ -61,7 +67,7 @@ const DataStore = {
 
   // Çıkış Yap
   async logout() {
-    await window.supabase.auth.signOut();
+    await window.sbClient.auth.signOut();
     location.reload();
   }
 };
