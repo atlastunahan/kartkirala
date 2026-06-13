@@ -2,8 +2,8 @@
    KartKirala — Cards Catalog (Enhanced Filters)
    ============================================ */
 
-function renderCardsPage() {
-  const cards = DataStore.getCards();
+async function renderCardsPage() {
+  const cards = (await DataStore.getCards()).filter(c => c.active);
 
   return `
     <div class="page-enter" style="padding-top: calc(var(--nav-height) + var(--space-12));">

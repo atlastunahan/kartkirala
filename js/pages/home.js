@@ -2,8 +2,8 @@
    KartKirala — Home Page (Enhanced Card Guide)
    ============================================ */
 
-function renderHomePage() {
-  const cards = DataStore.getCards().filter(c => c.active);
+async function renderHomePage() {
+  const cards = (await DataStore.getCards()).filter(c => c.active);
   const stats = DataStore.getStats();
 
   const liveUsers = 1200 + stats.totalUsers;
